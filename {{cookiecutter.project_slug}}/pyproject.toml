@@ -1,0 +1,90 @@
+[tool.black]
+line-length = {{ cookiecutter.max_line_length }}
+
+[tool.isort]
+line_length = {{ cookiecutter.max_line_length }}
+multi_line_output = 3
+include_trailing_comma = true
+use_parentheses = true
+
+[tool.pylint.message_control]
+disable = [
+    "import-error",
+    "bad-continuation",
+    "logging-fstring-interpolation",
+]
+
+[tool.pylint.format]
+max-line-length = {{ cookiecutter.max_line_length }}
+good-names = [
+    "logger",
+]
+
+[tool.mypy]
+ignore_missing_imports = true  # not supported yet
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-ra -q"  # test summary for (a)ll except passed
+testpaths = ["tests"]
+log_cli = true
+log_cli_level = "WARNING"
+
+[tool.tox]
+legacy_tox_ini = """
+[tox]
+envlist = black, isort, pylint, mypy, py36, py37, py38, py39, coverage-report, docs
+
+[testenv:black]
+skip_install = true
+deps = black
+commands =
+    black --diff src/
+    black --check src/
+
+[testenv:isort]
+skip_install = true
+deps = isort>5
+commands =
+    isort --diff src/
+    isort --check-only src/
+
+[testenv:pylint]
+skip_install = true
+deps = pylint
+commands = pylint src/
+
+[testenv:mypy]
+skip_install = true
+deps = mypy
+commands = mypy --ignore-missing-imports src/
+
+[testenv]
+extras = tests
+deps = toml
+commands = 
+    coverage run --parallel -m pytest
+
+[testenv:coverage-report]
+skip_install = true
+deps =
+    coverage>=5
+    toml
+commands =
+    - coverage combine
+    coverage report
+
+[testenv:docs]
+extras = docs
+changedir = docs
+commands =
+    sphinx-build -b linkcheck . _build
+    sphinx-build -b dummy . _build
+"""
+
+[tool.coverage.run]
+branch = true
+source = ["{{ cookiecutter.project_slug }}"]
+
+[tool.coverage.paths]
+source = ["src", ".tox/*/site-packages"]
