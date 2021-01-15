@@ -8,7 +8,7 @@
 - Checks & tests with [tox](https://tox.readthedocs.io)
   - Formatting with [black](https://github.com/psf/black)
   - Check sorted imports with [isort](https://pycqa.github.io/isort/)
-  - Code analysis with pylint [pylint](https://www.pylint.org)
+  - Code analysis with [pylint](https://www.pylint.org)
   - Type checks with [mypy](http://mypy-lang.org)
   - Testing with [pytest](https://pytest.org)
 - `pyproject.toml` for configuration
